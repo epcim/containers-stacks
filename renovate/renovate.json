@@ -1,0 +1,68 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "docker:enableMajor"
+  ],
+  "includePaths": [
+    "services/**"
+  ],
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "description": "Skip untrackable floating/major-only tags (:latest, :2, :v2)",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchCurrentVersion": "/^(latest|v?\\d+)$/",
+      "enabled": false
+    },
+    {
+      "description": "Re-enable major-only tag tracking for uptime-kuma, immich-ml and renovate",
+      "matchPackageNames": [
+        "louislam/uptime-kuma",
+        "ghcr.io/immich-app/immich-machine-learning",
+        "renovate/renovate"
+      ],
+      "enabled": true
+    },
+    {
+      "description": "Skip MongoDB (floating minor tag, untrackable)",
+      "matchPackageNames": [
+        "docker.io/mongo"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Skip immich postgres (pinned to specific vectorchord version)",
+      "matchPackageNames": [
+        "ghcr.io/immich-app/postgres"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Ignore pre-release versions (alpha, beta, rc, dev)",
+      "matchDatasources": [
+        "docker"
+      ],
+      "allowedVersions": "!/\\b(alpha|beta|rc|dev)\\b/i"
+    },
+    {
+      "description": "Auto-merge patch updates",
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Group all immich updates (server + ML must stay in sync)",
+      "matchPackageNames": [
+        "ghcr.io/immich-app/immich-server",
+        "ghcr.io/immich-app/immich-machine-learning"
+      ],
+      "groupName": "immich"
+    }
+  ]
+}

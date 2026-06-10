@@ -1,0 +1,9 @@
+- search:
+    provider: google
+    target: _blank
+
+- resources:
+    label: System
+    cpu: true
+    memory: true
+    disk: /

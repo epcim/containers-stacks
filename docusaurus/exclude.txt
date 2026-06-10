@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+.gitattributes
+.gitmodules
+
+# Obsidian
+.obsidian
+.templates
+.trash
+
+# AI / IDE / editors
+.opencode
+.claude
+.cursor
+.vscode
+.idea
+AGENTS*.md
+agents*.md
+CLAUDE*.md
+claude*.md
+TODO*.md
+todo*.md
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build tools
+node_modules
+Justfile
+Justfile.*
+Makefile
+
+# Synology
+@eaDir
+\#recycle

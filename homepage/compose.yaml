@@ -1,0 +1,54 @@
+services:
+  homepage:
+    # renovate: datasource=docker depName=ghcr.io/gethomepage/homepage
+    image: ghcr.io/gethomepage/homepage:v1.12.3
+    container_name: homepage
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - HOMEPAGE_ALLOWED_HOSTS=homepage.${LOCAL_DOMAIN}
+      - HOMEPAGE_VAR_DOCKHAND_USERNAME=${HOMEPAGE_VAR_DOCKHAND_USERNAME}
+      - HOMEPAGE_VAR_DOCKHAND_PASSWORD=${HOMEPAGE_VAR_DOCKHAND_PASSWORD}
+      - HOMEPAGE_VAR_FORGEJO_KEY=${HOMEPAGE_VAR_FORGEJO_KEY}
+      - HOMEPAGE_VAR_EMBY_KEY=${HOMEPAGE_VAR_EMBY_KEY}
+      - HOMEPAGE_VAR_NAVIDROME_USER=${HOMEPAGE_VAR_NAVIDROME_USER}
+      - HOMEPAGE_VAR_NAVIDROME_TOKEN=${HOMEPAGE_VAR_NAVIDROME_TOKEN}
+      - HOMEPAGE_VAR_NAVIDROME_SALT=${HOMEPAGE_VAR_NAVIDROME_SALT}
+      - HOMEPAGE_VAR_CALIBRE_USERNAME=${HOMEPAGE_VAR_CALIBRE_USERNAME}
+      - HOMEPAGE_VAR_CALIBRE_PASSWORD=${HOMEPAGE_VAR_CALIBRE_PASSWORD}
+      - HOMEPAGE_VAR_NAS_USERNAME=${HOMEPAGE_VAR_NAS_USERNAME}
+      - HOMEPAGE_VAR_NAS_PASSWORD=${HOMEPAGE_VAR_NAS_PASSWORD}
+      - HOMEPAGE_VAR_PROXMOX_USERNAME=${HOMEPAGE_VAR_PROXMOX_USERNAME}
+      - HOMEPAGE_VAR_PROXMOX_PASSWORD=${HOMEPAGE_VAR_PROXMOX_PASSWORD}
+      - HOMEPAGE_VAR_UNIFI_USERNAME=${HOMEPAGE_VAR_UNIFI_USERNAME}
+      - HOMEPAGE_VAR_UNIFI_PASSWORD=${HOMEPAGE_VAR_UNIFI_PASSWORD}
+      - HOMEPAGE_VAR_IMMICH_KEY=${HOMEPAGE_VAR_IMMICH_KEY}
+      - HOMEPAGE_VAR_NETBIRD_TOKEN=${HOMEPAGE_VAR_NETBIRD_TOKEN}
+      - HOMEPAGE_VAR_MIKROTIK_URL=${HOMEPAGE_VAR_MIKROTIK_URL}
+      - HOMEPAGE_VAR_MIKROTIK_USERNAME=${HOMEPAGE_VAR_MIKROTIK_USERNAME}
+      - HOMEPAGE_VAR_MIKROTIK_PASSWORD=${HOMEPAGE_VAR_MIKROTIK_PASSWORD}
+    volumes:
+      - homepage-config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage.rule=Host(`homepage.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.homepage.entrypoints=web"
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+
+volumes:
+  homepage-config:
+
+networks:
+  traefik_proxy:
+    external: true

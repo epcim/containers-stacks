@@ -1,0 +1,26 @@
+# Lightweight ingest container with calibredb CLI only (~300MB vs 2GB+)
+# Replaces linuxserver/calibre:7.28.0 for the ingest sidecar
+#
+# To use: rename to Dockerfile.ingest, update compose.yaml:
+#   calibre-ingest:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.ingest
+#     image: calibre-ingest:local
+
+# renovate: datasource=docker depName=python
+FROM python:3.12-alpine
+
+RUN apk add --no-cache \
+      bash \
+      calibre \
+      findutils \
+    && rm -rf /var/cache/apk/*
+
+# Verify calibredb is available
+RUN calibredb --version
+
+COPY ingest.sh /ingest.sh
+RUN chmod +x /ingest.sh
+
+ENTRYPOINT ["/ingest.sh"]

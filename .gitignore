@@ -1,0 +1,41 @@
+# Synology system
+\#recycle
+@eaDir/
+.DS_Store
+Thumbs.db
+*.bkp
+
+# Application runtime data (backed up via Hyper Backup, not git)
+/**/data
+/**/db
+/**/cert
+
+# But keep .gitkeep files for directory structure
+!/**/.gitkeep
+
+# No secrets
+**/.sops.env
+**/.sops.*
+**/.enc
+
+# must be encrypted/sops
+#**/.env.secret*
+#**/.secret*
+
+# AGE private keys (NEVER commit)
+keys.txt
+*.age
+
+# Local development
+.envrc.local
+*.sock
+
+# Editor/IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log

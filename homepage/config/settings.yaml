@@ -1,0 +1,23 @@
+title: Synology Dashboard
+theme: dark
+color: slate
+headerStyle: clean
+layout:
+  Infrastructure:
+    style: row
+    columns: 4
+  Network:
+    style: row
+    columns: 2
+  Kubernetes:
+    style: row
+    columns: 4
+  Books:
+    style: row
+    columns: 3
+  Media:
+    style: row
+    columns: 4
+  Applications:
+    style: row
+    columns: 4

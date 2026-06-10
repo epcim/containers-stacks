@@ -1,0 +1,66 @@
+# Docusaurus local build and test
+# Run from _stacks/docusaurus/: just build / just test / just push / just deploy
+
+set shell := ["bash", "-euc"]
+
+REGISTRY     := "forgejo.example.familyds.net/example"
+IMAGE_NAME   := "docusaurus"
+IMAGE_LOCAL  := IMAGE_NAME + ":test"
+PORT         := "8080"
+
+default:
+    @just --list
+
+# Build image locally (native arch, fast)
+build:
+    docker build -t {{IMAGE_LOCAL}} .
+
+# Build and run locally on port 8080
+test: build
+    @echo "Open http://localhost:{{PORT}}"
+    docker run --rm -p {{PORT}}:80 {{IMAGE_LOCAL}}
+
+# Run already-built local image (skip build)
+run:
+    @echo "Open http://localhost:{{PORT}}"
+    docker run --rm -p {{PORT}}:80 {{IMAGE_LOCAL}}
+
+# Build for amd64, push with unique tag, update compose, deploy
+deploy:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    tag=$(date +%Y%m%d-%H%M%S)
+    image="{{REGISTRY}}/{{IMAGE_NAME}}"
+
+    echo "Building ${image}:${tag} (linux/amd64)..."
+    docker buildx build --platform linux/amd64 \
+        -t "${image}:${tag}" \
+        -t "${image}:latest" \
+        --push .
+
+    echo "Updating compose.yaml -> ${image}:${tag}"
+    sed -i.bak "s|image:.*{{IMAGE_NAME}}.*|image: ${image}:${tag}|" compose.yaml
+    rm -f compose.yaml.bak
+
+    echo "Pushing compose change to git..."
+    cd ../..
+    git -C _stacks add docusaurus/compose.yaml
+    git -C _stacks commit -m "docusaurus: image ${tag}" 2>/dev/null || true
+    git -C _stacks push 2>/dev/null || echo "Git push skipped (push manually)"
+
+    echo "Deploying via Dockhand..."
+    just dockhand sync docusaurus true
+    echo "Done. Image: ${image}:${tag}"
+
+# Push :latest only (no tag rotation, for quick iterations)
+push:
+    docker buildx build --platform linux/amd64 \
+        -t {{REGISTRY}}/{{IMAGE_NAME}}:latest --push .
+
+# Tail logs of running container on NAS
+logs:
+    cd ../.. && just dockhand::logs docusaurus
+
+# Clean local test image
+clean:
+    docker rmi {{IMAGE_LOCAL}} 2>/dev/null || true

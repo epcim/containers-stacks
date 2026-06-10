@@ -1,0 +1,42 @@
+services:
+  gonic:
+    # renovate: datasource=docker depName=sentriz/gonic
+    image: sentriz/gonic:latest
+    container_name: gonic
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - GONIC_MUSIC_PATH=/music
+      - GONIC_PODCAST_PATH=/podcasts
+      - GONIC_PLAYLIST_PATH=/data/playlists
+      - GONIC_DB_PATH=/data/gonic.db
+      - GONIC_CACHE_PATH=/data/cache
+      - GONIC_SCAN_INTERVAL=180
+    volumes:
+      - gonic-data:/data
+      - /volume1/Media/music:/music:ro
+      - /volume1/Media/podcasts:/podcasts:ro
+    networks:
+      - traefik_proxy
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gonic.rule=Host(`gonic.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.gonic.entrypoints=web"
+      - "traefik.http.services.gonic.loadbalancer.server.port=80"
+      # Homepage
+      - "homepage.group=Media"
+      - "homepage.name=Gonic"
+      - "homepage.icon=gonic"
+      - "homepage.href=https://gonic.${LOCAL_DOMAIN}"
+      - "homepage.description=Music streaming (Subsonic)"
+
+volumes:
+  gonic-data:
+
+networks:
+  traefik_proxy:
+    external: true

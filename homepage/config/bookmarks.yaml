@@ -1,0 +1,10 @@
+- Documentation:
+    - Synology:
+        - icon: synology
+          href: https://172.31.2.12:5001
+    - Dockhand Docs:
+        - icon: dockhand
+          href: https://dockhand.pro/manual/
+    - Traefik Docs:
+        - icon: traefik
+          href: https://doc.traefik.io/traefik/

@@ -1,0 +1,37 @@
+services:
+  hass:
+    # renovate: datasource=docker depName=homeassistant/home-assistant
+    image: homeassistant/home-assistant:stable
+    container_name: hass
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
+    environment:
+      - TZ=${TZ:-Europe/Prague}
+    volumes:
+      - hass-config:/config
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.hass.rule=Host(`hass.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.hass.entrypoints=web"
+      - "traefik.http.services.hass.loadbalancer.server.port=8123"
+      - "homepage.group=Home"
+      - "homepage.name=Home Assistant"
+      - "homepage.icon=home-assistant"
+      - "homepage.href=https://hass.${LOCAL_DOMAIN}"
+      - "homepage.description=Home automation platform"
+
+volumes:
+  hass-config:
+    external: true
+    name: hass_hass-config
+
+networks:
+  traefik_proxy:
+    external: true

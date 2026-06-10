@@ -1,0 +1,38 @@
+services:
+  navidrome:
+    # renovate: datasource=docker depName=deluan/navidrome
+    image: deluan/navidrome:0.54.5
+    container_name: navidrome
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - ND_SCANSCHEDULE=${ND_SCANSCHEDULE}
+      - ND_LOGLEVEL=${ND_LOGLEVEL}
+      - ND_SESSIONTIMEOUT=${ND_SESSIONTIMEOUT}
+      - ND_BASEURL=${ND_BASEURL}
+      - ND_ENABLETRANSCODINGCONFIG=${ND_ENABLETRANSCODINGCONFIG}
+      - ND_ENABLESHARING=${ND_ENABLESHARING}
+    user: "${PUID}:${PGID}"
+    volumes:
+      - navidrome-data:/data
+      - /volume1/Media/music:/music:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.navidrome.rule=Host(`navidrome.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.navidrome.entrypoints=web"
+      - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
+      # Homepage
+      - "homepage.group=Media"
+      - "homepage.name=Navidrome"
+      - "homepage.icon=navidrome"
+      - "homepage.href=https://navidrome.${LOCAL_DOMAIN}"
+      - "homepage.description=Music streaming"
+
+volumes:
+  navidrome-data:
+
+networks:
+  traefik_proxy:
+    external: true

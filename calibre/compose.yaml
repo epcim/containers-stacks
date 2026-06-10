@@ -1,0 +1,121 @@
+services:
+  calibre-beletry:
+    # renovate: datasource=docker depName=linuxserver/calibre-web
+    image: linuxserver/calibre-web:latest
+    container_name: calibre-beletry
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOCKER_MODS=linuxserver/mods:universal-calibre
+      - ANON_BROWSE=${ANON_BROWSE}
+    volumes:
+      - calibre-beletry-config:/config
+      - calibre-mods:/app/calibre-web/cps/static/calibre
+      - /volume1/Media/books-text/Beletry:/books:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.calibre-beletry.rule=Host(`calibre.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.calibre-beletry.entrypoints=web"
+      - "traefik.http.services.calibre-beletry.loadbalancer.server.port=8083"
+      # Homepage
+      - "homepage.group=Media"
+      - "homepage.name=Calibre (Beletry)"
+      - "homepage.icon=calibre"
+      - "homepage.href=https://calibre.${LOCAL_DOMAIN}"
+      - "homepage.description=Ebook library - Beletry"
+
+  calibre-fiction:
+    # renovate: datasource=docker depName=linuxserver/calibre-web
+    image: linuxserver/calibre-web:latest
+    container_name: calibre-fiction
+    restart: unless-stopped
+    depends_on:
+      calibre-beletry:
+        condition: service_started
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOCKER_MODS=linuxserver/mods:universal-calibre
+      - ANON_BROWSE=${ANON_BROWSE}
+    volumes:
+      - calibre-fiction-config:/config
+      - calibre-mods:/app/calibre-web/cps/static/calibre
+      - /volume1/Media/books-text/Fiction:/books:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.calibre-fiction.rule=Host(`calibre-fiction.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.calibre-fiction.entrypoints=web"
+      - "traefik.http.services.calibre-fiction.loadbalancer.server.port=8083"
+      # Homepage
+      - "homepage.group=Media"
+      - "homepage.name=Calibre (Fiction)"
+      - "homepage.icon=calibre"
+      - "homepage.href=https://calibre-fiction.${LOCAL_DOMAIN}"
+      - "homepage.description=Ebook library - Fiction"
+
+  calibre-education:
+    # renovate: datasource=docker depName=linuxserver/calibre-web
+    image: linuxserver/calibre-web:latest
+    container_name: calibre-education
+    restart: unless-stopped
+    depends_on:
+      calibre-beletry:
+        condition: service_started
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - DOCKER_MODS=linuxserver/mods:universal-calibre
+      - ANON_BROWSE=${ANON_BROWSE}
+    volumes:
+      - calibre-education-config:/config
+      - calibre-mods:/app/calibre-web/cps/static/calibre
+      - /volume1/Media/books-text/Education:/books:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.calibre-education.rule=Host(`calibre-education.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.calibre-education.entrypoints=web"
+      - "traefik.http.services.calibre-education.loadbalancer.server.port=8083"
+      # Homepage
+      - "homepage.group=Media"
+      - "homepage.name=Calibre (Education)"
+      - "homepage.icon=calibre"
+      - "homepage.href=https://calibre-education.${LOCAL_DOMAIN}"
+      - "homepage.description=Ebook library - Education"
+
+  # TODO: enable ingest container after testing calibre-web instances
+  # calibre-ingest:
+  #   # renovate: datasource=docker depName=linuxserver/calibre
+  #   image: linuxserver/calibre:latest
+  #   container_name: calibre-ingest
+  #   restart: unless-stopped
+  #   environment:
+  #     - TZ=${TZ}
+  #     - PUID=${PUID}
+  #     - PGID=${PGID}
+  #     - CALIBRE_DEFAULT_LIBRARY=${CALIBRE_DEFAULT_LIBRARY}
+  #     - INGEST_INTERVAL=${INGEST_INTERVAL}
+  #   volumes:
+  #     - /volume1/Media/books-inbox:/inbox
+  #     - /volume1/Media/books-text:/books-text
+  #     - ./ingest.sh:/ingest.sh:ro
+  #   entrypoint: ["/bin/bash", "-c", "chmod +x /ingest.sh && exec /ingest.sh"]
+
+volumes:
+  calibre-beletry-config:
+  calibre-fiction-config:
+  calibre-education-config:
+  calibre-mods:
+
+networks:
+  traefik_proxy:
+    external: true

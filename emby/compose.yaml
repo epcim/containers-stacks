@@ -1,0 +1,39 @@
+services:
+  emby:
+    # renovate: datasource=docker depName=emby/embyserver
+    image: emby/embyserver:4.9.0.42
+    container_name: emby
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - UID=${PUID}
+      - GID=${PGID}
+    volumes:
+      - emby-config:/config
+      - /volume1/Media/movies:/media/movies:ro
+      - /volume1/Media/music:/media/music:ro
+      - /volume1/Media/music-dsd:/media/music-dsd:ro
+      - /volume1/Media/music-mp3:/media/music-mp3:ro
+      - /volume1/Media/music-ytb:/media/music-ytb:ro
+      - /volume1/Media/podcasts:/media/podcasts:ro
+      - /volume1/Media/books-audio:/media/audiobooks:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.emby.rule=Host(`emby.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.emby.entrypoints=web"
+      - "traefik.http.services.emby.loadbalancer.server.port=8096"
+      # Homepage
+      - "homepage.group=Media"
+      - "homepage.name=Emby"
+      - "homepage.icon=emby"
+      - "homepage.href=https://emby.${LOCAL_DOMAIN}"
+      - "homepage.description=Media server"
+
+volumes:
+  emby-config:
+
+networks:
+  traefik_proxy:
+    external: true

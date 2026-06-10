@@ -1,0 +1,40 @@
+# Forgejo Actions runner — Linux host / NAS deployment (Docker)
+#
+# Prerequisites:
+#   1. Forgejo Actions enabled on the server
+#   2. Registration token from Forgejo (Site Admin -> Actions -> Runners)
+#   3. Set RUNNER_TOKEN in Dockhand or .env.secrets
+#
+# Usage:
+#   docker compose up -d
+#   docker compose logs -f
+services:
+  forgejo-runner:
+    # renovate: datasource=docker depName=codeberg.org/forgejo/runner
+    image: codeberg.org/forgejo/runner:6
+    container_name: forgejo-runner
+    restart: unless-stopped
+    environment:
+      - FORGEJO_URL=https://forgejo.${LOCAL_DOMAIN}
+      - RUNNER_TOKEN=${RUNNER_TOKEN}
+      - RUNNER_NAME=${RUNNER_NAME:-nas-runner}
+      - RUNNER_LABELS=${RUNNER_LABELS:-docker:docker://node:20,ubuntu-latest:docker://ubuntu:22.04}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - forgejo-runner-data:/data
+    networks:
+      - traefik_proxy
+    labels:
+      # Homepage auto-discovery
+      - "homepage.group=Infrastructure"
+      - "homepage.name=Forgejo Runner"
+      - "homepage.icon=forgejo"
+      - "homepage.href=https://forgejo.${LOCAL_DOMAIN}/-/admin/runners"
+      - "homepage.description=CI/CD runner for Forgejo Actions"
+
+volumes:
+  forgejo-runner-data:
+
+networks:
+  traefik_proxy:
+    external: true

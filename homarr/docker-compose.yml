@@ -1,0 +1,28 @@
+# Synology ContainerManager deployment
+services:
+  homarr:
+    # renovate: datasource=docker depName=ghcr.io/homarr-labs/homarr
+    image: ghcr.io/homarr-labs/homarr:v1.48.0
+    container_name: homarr
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - SECRET_ENCRYPTION_KEY=${HOMARR_SECRET_ENCRYPTION_KEY}
+      - AUTH_PROVIDERS=credentials
+      - AUTH_PASSWORD_REQUIREMENTS={"minLength":1,"minUppercase":0,"minLowercase":0,"minNumbers":0,"minSpecial":0}
+    volumes:
+      - ${DOCKER_DATA}/homarr/data:/appdata
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - traefik_proxy
+    labels:
+      - "dockhand.ignore=true"
+      - "komodo.ignore=true"
+      - "traefik.enable=true"
+      - "traefik.http.routers.homarr.rule=Host(`homarr.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.homarr.entrypoints=web"
+      - "traefik.http.services.homarr.loadbalancer.server.port=7575"
+
+networks:
+  traefik_proxy:
+    external: true

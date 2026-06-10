@@ -1,0 +1,13 @@
+# Cloned repo data (populated at runtime by entrypoint.sh / just docusaurus fetch)
+# The parent _stacks/.gitignore already covers /**/data, but be explicit:
+data/
+
+# .git dirs from cloned repos (safety net)
+**/.git/
+
+# Docusaurus build artifacts
+site/build/
+site/.docusaurus/
+
+# Node.js
+site/node_modules/

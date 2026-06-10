@@ -1,0 +1,33 @@
+services:
+  beets:
+    # renovate: datasource=docker depName=linuxserver/beets
+    image: linuxserver/beets:latest
+    container_name: beets
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+      - PUID=${PUID}
+      - PGID=${PGID}
+    volumes:
+      - beets-config:/config
+      - /volume1/Media/music:/music
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.beets.rule=Host(`beets.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.beets.entrypoints=web"
+      - "traefik.http.services.beets.loadbalancer.server.port=8337"
+      # Homepage
+      - "homepage.group=Media"
+      - "homepage.name=Beets"
+      - "homepage.icon=beets"
+      - "homepage.href=https://beets.${LOCAL_DOMAIN}"
+      - "homepage.description=Music library manager"
+
+volumes:
+  beets-config:
+
+networks:
+  traefik_proxy:
+    external: true

@@ -1,0 +1,141 @@
+services:
+  paperless:
+    # renovate: datasource=docker depName=ghcr.io/paperless-ngx/paperless-ngx
+    image: ghcr.io/paperless-ngx/paperless-ngx:2.16
+    container_name: paperless
+    restart: unless-stopped
+    depends_on:
+      paperless-redis:
+        condition: service_started
+      paperless-db:
+        condition: service_healthy
+      paperless-tika:
+        condition: service_started
+      paperless-gotenberg:
+        condition: service_started
+    environment:
+      - TZ=${TZ}
+      - USERMAP_UID=${PUID}
+      - USERMAP_GID=${PGID}
+      # Server
+      - PAPERLESS_URL=https://paperless.${LOCAL_DOMAIN}
+      - PAPERLESS_PORT=8000
+      - PAPERLESS_TIME_ZONE=${TZ}
+      # Paths
+      - PAPERLESS_CONSUMPTION_DIR=/consume
+      - PAPERLESS_DATA_DIR=/data
+      - PAPERLESS_MEDIA_ROOT=/media
+      # Database
+      - PAPERLESS_DBENGINE=postgresql
+      - PAPERLESS_DBHOST=paperless-db
+      - PAPERLESS_DBPORT=5432
+      - PAPERLESS_DBNAME=${POSTGRES_DATABASE}
+      - PAPERLESS_DBUSER=${POSTGRES_USER}
+      - PAPERLESS_DBPASS=${POSTGRES_PASSWORD}
+      # Redis
+      - PAPERLESS_REDIS=redis://paperless-redis:6379
+      # OCR
+      - PAPERLESS_OCR_LANGUAGE=${PAPERLESS_OCR_LANGUAGE}
+      - PAPERLESS_OCR_LANGUAGES=${PAPERLESS_OCR_LANGUAGES}
+      - PAPERLESS_OCR_MODE=${PAPERLESS_OCR_MODE}
+      - PAPERLESS_OCR_SKIP_ARCHIVE_FILE=${PAPERLESS_OCR_SKIP_ARCHIVE_FILE}
+      # Tika (office document support: ODT, DOCX, XLSX, PPTX, etc.)
+      - PAPERLESS_TIKA_ENABLED=true
+      - PAPERLESS_TIKA_GOTENBERG_ENDPOINT=http://paperless-gotenberg:3000
+      - PAPERLESS_TIKA_ENDPOINT=http://paperless-tika:9998
+      # Consumption
+      - PAPERLESS_CONSUMER_RECURSIVE=${PAPERLESS_CONSUMER_RECURSIVE}
+      - PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS=${PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS}
+      - PAPERLESS_CONSUMER_POLLING=${PAPERLESS_CONSUMER_POLLING}
+      - PAPERLESS_FILENAME_FORMAT=${PAPERLESS_FILENAME_FORMAT}
+      # SMTP (mapped from shared MAILER_* vars)
+      - PAPERLESS_EMAIL_HOST=${MAILER_HOST}
+      - PAPERLESS_EMAIL_PORT=${MAILER_PORT}
+      - PAPERLESS_EMAIL_HOST_USER=${MAILER_AUTH_USER}
+      - PAPERLESS_EMAIL_HOST_PASSWORD=${MAILER_AUTH_PASSWORD}
+      - PAPERLESS_EMAIL_FROM=${MAILER_NOREPLY_EMAIL}
+      - PAPERLESS_EMAIL_USE_TLS=true
+      # Admin (first-start only)
+      - PAPERLESS_ADMIN_USER=${PAPERLESS_ADMIN_USER}
+      - PAPERLESS_ADMIN_PASSWORD=${PAPERLESS_ADMIN_PASSWORD}
+      - PAPERLESS_ADMIN_MAIL=${PAPERLESS_ADMIN_MAIL}
+      # Secret key
+      - PAPERLESS_SECRET_KEY=${PAPERLESS_SECRET_KEY}
+    volumes:
+      - paperless-data:/data
+      - /volume1/Documents/paperless/media:/media
+      - /volume1/Documents/paperless/consume:/consume
+    networks:
+      - traefik_proxy
+      - paperless_internal
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.paperless.rule=Host(`paperless.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.paperless.entrypoints=web"
+      - "traefik.http.services.paperless.loadbalancer.server.port=8000"
+      # Homepage
+      - "homepage.group=Applications"
+      - "homepage.name=Paperless-ngx"
+      - "homepage.icon=paperless-ngx"
+      - "homepage.href=https://paperless.${LOCAL_DOMAIN}"
+      - "homepage.description=Document management"
+
+  paperless-tika:
+    # renovate: datasource=docker depName=apache/tika
+    image: apache/tika:3.1.0.0
+    container_name: paperless-tika
+    restart: unless-stopped
+    networks:
+      - paperless_internal
+
+  paperless-gotenberg:
+    # renovate: datasource=docker depName=gotenberg/gotenberg
+    image: gotenberg/gotenberg:8.17.3
+    container_name: paperless-gotenberg
+    restart: unless-stopped
+    command:
+      - "gotenberg"
+      - "--chromium-disable-javascript=true"
+      - "--chromium-allow-list=file:///tmp/.*"
+    networks:
+      - paperless_internal
+
+  paperless-redis:
+    # renovate: datasource=docker depName=redis
+    image: redis:7-alpine
+    container_name: paperless-redis
+    restart: unless-stopped
+    volumes:
+      - paperless-redis-data:/data
+    networks:
+      - paperless_internal
+
+  paperless-db:
+    # renovate: datasource=docker depName=postgres
+    image: postgres:16-alpine
+    container_name: paperless-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - paperless-db-data:/var/lib/postgresql/data
+    networks:
+      - paperless_internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  paperless-data:
+  paperless-redis-data:
+  paperless-db-data:
+
+networks:
+  traefik_proxy:
+    external: true
+  paperless_internal:
+    driver: bridge

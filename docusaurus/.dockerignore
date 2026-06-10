@@ -1,0 +1,10 @@
+# Prevent local node_modules (possibly wrong arch) from being sent to Docker
+# Without this, COPY site/ ./ would overwrite npm ci with local ARM binaries
+site/node_modules/
+site/build/
+site/.docusaurus/
+
+# Git and editor noise
+**/.git/
+**/.DS_Store
+data/

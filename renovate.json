@@ -1,0 +1,48 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "docker:enableMajor"
+  ],
+  "platform": "forgejo",
+  "labels": ["dependencies"],
+  "minimumReleaseAge": "14 days",
+  "separateMinorPatch": true,
+  "packageRules": [
+    {
+      "description": "Disable patch-level updates (only minor and major)",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["patch"],
+      "enabled": false
+    },
+    {
+      "description": "Major updates: longer stabilization (30 days)",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "30 days"
+    },
+    {
+      "description": "Disable images pinned to latest (no semver to track)",
+      "matchDatasources": ["docker"],
+      "matchCurrentVersion": "/^latest$/",
+      "enabled": false
+    },
+    {
+      "description": "Group PostgreSQL updates across stacks",
+      "matchPackageNames": ["postgres"],
+      "groupName": "postgresql"
+    },
+    {
+      "description": "Group Redis updates across stacks",
+      "matchPackageNames": ["redis"],
+      "groupName": "redis"
+    },
+    {
+      "description": "Dockerfile base images: track minor updates",
+      "matchDatasources": ["docker"],
+      "matchFileNames": ["**/Dockerfile"],
+      "matchUpdateTypes": ["minor", "major"],
+      "enabled": true
+    }
+  ]
+}
