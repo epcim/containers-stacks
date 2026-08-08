@@ -9,6 +9,7 @@ services:
       - TZ=${TZ}
     networks:
       - traefik_proxy
+      - net_isolated
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.excalidraw.rule=Host(`excalidraw.${LOCAL_DOMAIN}`)"
@@ -23,4 +24,6 @@ services:
 
 networks:
   traefik_proxy:
+    external: true
+  net_isolated:
     external: true
