@@ -1,0 +1,26 @@
+# Dockhand deployment - env vars via Dockhand Config Sets
+services:
+  excalidraw:
+    # renovate: datasource=docker depName=excalidraw/excalidraw
+    image: excalidraw/excalidraw:latest
+    container_name: excalidraw
+    restart: unless-stopped
+    environment:
+      - TZ=${TZ}
+    networks:
+      - traefik_proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.excalidraw.rule=Host(`excalidraw.${LOCAL_DOMAIN}`)"
+      - "traefik.http.routers.excalidraw.entrypoints=web"
+      - "traefik.http.services.excalidraw.loadbalancer.server.port=80"
+      # Homepage
+      - "homepage.group=Applications"
+      - "homepage.name=Excalidraw"
+      - "homepage.icon=excalidraw"
+      - "homepage.href=https://excalidraw.${LOCAL_DOMAIN}"
+      - "homepage.description=Whiteboard"
+
+networks:
+  traefik_proxy:
+    external: true
