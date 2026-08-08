@@ -1,16 +1,17 @@
 services:
   docusaurus:
-    # Build locally, push to registry:
-    #   docker compose build
-    #   docker push forgejo.example.familyds.net/example/docusaurus:latest
-    image: forgejo.example.familyds.net/example/docusaurus:20260420-134536
+    # Build the image directly on the Synology NAS on-the-fly!
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: local/docusaurus:latest
     container_name: docusaurus
     restart: unless-stopped
     dns:
       - ${DNS_IP:-172.31.2.1}
       - 1.1.1.1
     extra_hosts:
-      - "forgejo.example.familyds.net:${NAS_IP:-172.31.2.12}"
+      - "forgejo.${LOCAL_DOMAIN}:${NAS_IP:-172.31.2.12}"
     environment:
       - TZ=${TZ:-Europe/Prague}
     volumes:
