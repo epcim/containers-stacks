@@ -1,33 +1,36 @@
 ---
 slug: /
+sidebar_label: Vítejte
 ---
 
-# Documentation Hub 📚
+# Interní Dokumentační Portál 🏗️
 
-Welcome to your internal Synology Documentation site!
-
-This page is a placeholder. Once you populate **`repos.json`** with your real Git repositories, Dockhand's runtime build will pull those documents down dynamically, compile them, and serve your beautiful live documentation here!
-
----
-
-### 📝 How to configure your repositories:
-
-Open and edit **`repos.json`** inside your `docusaurus` folder to define where your documentation resides:
-
-```json
-[
-  {
-    "name": "synology",
-    "url": "https://github.com/epcim/containers-stacks.git",
-    "branch": "main",
-    "docs_path": "_docs",
-    "target": "synology"
-  }
-]
-```
+Vítejte na centrálním dokumentačním portálu společnosti **Stavby Dlouhý**. Tento portál slouží jako jednotný zdroj pravdy pro naše technické návody, konfigurace a firemní standardy.
 
 ---
 
-### ⚙️ Live Dynamic Update:
+### 📂 Hlavní Sekce Portálu
 
-Every time the container starts, it reads `repos.json`, fetches any modifications, compiles the new Markdown files dynamically, and serves the static HTML through Nginx!
+Na levém panelu naleznete přehledně organizované sekce:
+
+* **📁 Firemní Dokumentace**
+  * Vaše firemní návody a dokumenty spravované přímo přes Synology Drive.
+* **📁 Technické Návody (Markdown)**
+  * Rychlé cheatsheety a příručky pro efektivní práci s formátem Markdown.
+
+---
+
+### 📝 Jak přidat nový návod?
+
+Přidání nového obsahu je otázkou několika vteřin a nevyžaduje žádné programování:
+
+1. Otevřete složku **`Firma/IT/dokumentace`** na vašem Synology Drive.
+2. Vytvořte nový soubor s příponou **`.md`** (např. `novy-navod.md`).
+3. Napište text v jednoduchém formátu Markdown.
+4. Uložte soubor. Portál se automaticky aktualizuje a zařadí jej do menu!
+
+---
+
+> [!TIP]
+> **Potřebujete pomoct s formátováním?**
+> Rozklikněte sekci **Markdown** v levém menu pro rychlý přehled všech stylů, tabulek a zkratek!
