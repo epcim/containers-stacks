@@ -1,3 +1,7 @@
+---
+slug: /
+---
+
 # Documentation Hub 📚
 
 Welcome to your internal Synology Documentation site!

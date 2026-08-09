@@ -17,6 +17,8 @@ services:
     volumes:
       # Persists cloned repos across restarts; populated by entrypoint.sh
       - docusaurus-data:/data
+      # Bind-mount your local Synology drive folder containing your index.md and other guides
+      - /volume2/Firma/IT/dokumentace:/app/docs
     networks:
       - traefik_proxy
     labels:

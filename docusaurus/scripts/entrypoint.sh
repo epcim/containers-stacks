@@ -34,6 +34,7 @@ if [ -f "$REPOS_JSON" ] && [ -s "$REPOS_JSON" ]; then
         branch=$(echo "$repo" | jq -r '.branch // "main"')
         docs_path=$(echo "$repo" | jq -r '.docs_path // "docs"')
         target=$(echo "$repo" | jq -r '.target // .name')
+        label=$(echo "$repo" | jq -r '.label // ""')
 
         clone_dir="$DATA_DIR/$name"
 
@@ -60,6 +61,12 @@ if [ -f "$REPOS_JSON" ] && [ -s "$REPOS_JSON" ]; then
             rm -rf "$dest"
             mkdir -p "$dest"
             tar -C "$src" --exclude-from=/app/exclude.txt -cf - . | tar -C "$dest" -xf -
+            
+            # If a custom label is specified in repos.json, generate Docusaurus category configuration
+            if [ -n "$label" ]; then
+                echo "  Creating category configuration for $target with label: $label"
+                echo "{\"label\": \"$label\"}" > "$dest/_category_.json"
+            fi
         else
             echo "  WARNING: $src not found in $name, skipping"
         fi

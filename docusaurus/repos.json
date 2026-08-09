@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "name": "markdown-cheatsheet",
+    "url": "https://github.com/epcim/markdown-cheatsheet.git",
+    "branch": "main",
+    "docs_path": ".",
+    "target": "markdown",
+    "label": "Markdown"
+  }
+]
