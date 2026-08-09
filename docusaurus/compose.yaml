@@ -17,9 +17,9 @@ services:
       # Persists cloned repos across restarts; populated by entrypoint.sh
       - docusaurus-data:/data
       # Optional: Bind-mount local directories containing your guides (safe fallbacks if empty)
-      - ${LOCAL_DOCS_PATH:-./empty}:/app/docs/dokumentace
-      - ${LOCAL_DOCS_PATH_2:-./empty}:/app/docs/dokumentace_2
-      - ${LOCAL_DOCS_PATH_3:-./empty}:/app/docs/dokumentace_3
+      - ${LOCAL_DOCS_PATH:-docusaurus-empty}:/app/docs/dokumentace
+      - ${LOCAL_DOCS_PATH_2:-docusaurus-empty}:/app/docs/dokumentace_2
+      - ${LOCAL_DOCS_PATH_3:-docusaurus-empty}:/app/docs/dokumentace_3
     networks:
       - traefik_proxy
     labels:
@@ -36,6 +36,7 @@ services:
 
 volumes:
   docusaurus-data:
+  docusaurus-empty:
 
 networks:
   traefik_proxy:
