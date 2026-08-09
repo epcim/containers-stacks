@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: ${DOCKER_REGISTRY:-forgejo.example.familyds.net/example}/docusaurus:latest
     container_name: docusaurus
     restart: unless-stopped
     dns:

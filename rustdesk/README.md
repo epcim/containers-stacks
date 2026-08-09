@@ -40,9 +40,17 @@ Unlike default Docker templates that use `network_mode: host` (which binds ports
 This guarantees that RustDesk only listens and accepts connections on your **USER VLAN network interface**, keeping your management and administrative subnets completely secure.
 
 ### Synology DSM Firewall Rules
-Ensure your DSM firewall allows incoming traffic from the User VLAN to the Synology IP on the following ports:
-* **TCP**: `21115`, `21116`, `21117`
-* **UDP**: `21116`
+
+Ensure your DSM firewall allows incoming traffic from the User VLAN to the Synology IP on the required ports:
+
+* **With Relay (`hbbr`) enabled** (Standard/Fallback setup):
+  * **TCP**: `21115`, `21116`, `21117`
+  * **UDP**: `21116`
+
+* **Without Relay (`hbbr`)** (Only ID registration, client IP discovery, and direct P2P connection):
+  * **TCP**: `21115`, `21116`
+  * **UDP**: `21116`
+  * *(Port `21117` TCP can remain closed as all session traffic runs peer-to-peer without relays).*
 
 ---
 
