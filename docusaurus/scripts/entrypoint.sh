@@ -84,6 +84,7 @@ npm run build 2>&1
 echo "==> Deploying build to nginx..."
 rm -rf "${NGINX_HTML:?}/"*
 cp -r "$BUILD_DIR/." "$NGINX_HTML/"
+chmod -R 755 "$NGINX_HTML"
 
 # ── 4. Start nginx ───────────────────────────────────────────────────────
 echo "==> Starting nginx"
