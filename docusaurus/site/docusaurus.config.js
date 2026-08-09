@@ -9,6 +9,21 @@ const config = {
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
 
+  i18n: {
+    defaultLocale: 'cs',
+    locales: ['cs', 'en'],
+    localeConfigs: {
+      cs: {
+        htmlLang: 'cs',
+        label: 'Čeština',
+      },
+      en: {
+        htmlLang: 'en',
+        label: 'English',
+      },
+    },
+  },
+
   presets: [
     [
       'classic',
@@ -34,9 +49,13 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'index',
             position: 'left',
             label: 'Docs',
+          },
+          {
+            type: 'localeDropdown',
+            position: 'right',
           },
         ],
       },
