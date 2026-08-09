@@ -48,8 +48,8 @@ const config = {
         title: 'Synology Wiki',
         items: [
           {
-            type: 'doc',
-            docId: 'index',
+            type: 'docSidebar',
+            sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Docs',
           },
