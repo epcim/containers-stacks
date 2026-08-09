@@ -32,6 +32,17 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           routeBasePath: '/', // Serve docs at root URL
+          exclude: [
+            '**/_*.{md,mdx}',
+            '**/ARCHITECTURE.md',
+            '**/DEPLOYMENT.md',
+            '**/DESIGN.md',
+            '**/DSM-PORTS.md',
+            '**/NETWORKING.md',
+            '**/NETWORKS-SETUP.md',
+            '**/README.md',
+            '**/LICENSE*'
+          ],
         },
         blog: false,
         theme: {
