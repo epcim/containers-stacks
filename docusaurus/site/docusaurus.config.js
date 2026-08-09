@@ -11,15 +11,11 @@ const config = {
 
   i18n: {
     defaultLocale: 'cs',
-    locales: ['cs', 'en'],
+    locales: ['cs'],
     localeConfigs: {
       cs: {
         htmlLang: 'cs',
         label: 'Čeština',
-      },
-      en: {
-        htmlLang: 'en',
-        label: 'English',
       },
     },
   },
@@ -63,10 +59,6 @@ const config = {
             sidebarId: 'tutorialSidebar',
             position: 'left',
             label: 'Docs',
-          },
-          {
-            type: 'localeDropdown',
-            position: 'right',
           },
         ],
       },
