@@ -59,7 +59,7 @@ services:
       - ${LOCAL_DOCS_PATH}:/app/docs
 ```
 
-Each user defines `LOCAL_DOCS_PATH` inside their private `.env` (e.g., `LOCAL_DOCS_PATH=/volume1/homes/petr/Drive/IT-docs`), making the template fully reusable by anyone in the community!
+Each user defines `LOCAL_DOCS_PATH` inside their private `.env` (e.g., `LOCAL_DOCS_PATH=/volume1/homes/yourusername/Drive/IT-docs`), making the template fully reusable by anyone in the community!
 
 ---
 
