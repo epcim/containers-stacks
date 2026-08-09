@@ -22,12 +22,12 @@ Na levém panelu naleznete přehledně organizované sekce:
 
 ### 📝 Jak přidat nový návod?
 
-Přidání nového obsahu je otázkou několika vteřin a nevyžaduje žádné programování:
+Přidání nového obsahu je otázkou několika vteřin a nevyžaduje žádné technické znalosti. Pro psaní a správu návodů vřele doporučujeme bezplatný a špičkový editor **[Obsidian](https://obsidian.md/)**:
 
-1. Otevřete složku **`Firma/IT/dokumentace`** na vašem Synology Drive.
-2. Vytvořte nový soubor s příponou **`.md`** (např. `novy-navod.md`).
-3. Napište text v jednoduchém formátu Markdown.
-4. Uložte soubor. Portál se automaticky aktualizuje a zařadí jej do menu!
+1. **Stáhněte si Obsidian**: Pokud jej ještě nemáte, stáhněte si bezplatný [Obsidian pro macOS/Windows](https://obsidian.md/download).
+2. **Otevřete složku jako Trezor (Vault)**: Spusťte Obsidian, klikněte na *"Open folder as vault"* a zvolte složku **`Firma/IT/dokumentace`** (váš Synology Drive nebo síťový disk).
+3. **Vytvořte nebo upravte návod**: Vytvořte nový soubor s příponou `.md` (např. `novy-navod.md`) nebo upravte existující. Obsidian vám automaticky formátuje nadpisy, obrázky i tabulky v reálném čase.
+4. **Uložte změny**: Jakmile soubor v Obsidianu uložíte, změny se bezpečně synchronizují na Synology NAS. Portál je automaticky načte a zařadí do menu při příštím restartu kontejneru `docusaurus`!
 
 ---
 
