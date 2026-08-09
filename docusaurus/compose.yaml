@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: local/docusaurus:latest
     container_name: docusaurus
     restart: unless-stopped
     dns:
