@@ -1,0 +1,37 @@
+services:
+  hbbs:
+    # renovate: datasource=docker depName=rustdesk/rustdesk-server
+    image: rustdesk/rustdesk-server:1.1.11-1
+    container_name: rustdesk-hbbs
+    command: hbbs -r ${NAS_IP:-172.31.2.12}:21117
+    restart: unless-stopped
+    ports:
+      # Bind explicitly to the LAN / USER network interface IP
+      - "${NAS_IP:-172.31.2.12}:21115:21115/tcp"
+      - "${NAS_IP:-172.31.2.12}:21116:21116/tcp"
+      - "${NAS_IP:-172.31.2.12}:21116:21116/udp"
+    volumes:
+      - rustdesk-data:/root
+    networks:
+      - traefik_proxy
+
+  hbbr:
+    # renovate: datasource=docker depName=rustdesk/rustdesk-server
+    image: rustdesk/rustdesk-server:1.1.11-1
+    container_name: rustdesk-hbbr
+    command: hbbr
+    restart: unless-stopped
+    ports:
+      # Bind explicitly to the LAN / USER network interface IP
+      - "${NAS_IP:-172.31.2.12}:21117:21117/tcp"
+    volumes:
+      - rustdesk-data:/root
+    networks:
+      - traefik_proxy
+
+volumes:
+  rustdesk-data:
+
+networks:
+  traefik_proxy:
+    external: true
