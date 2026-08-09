@@ -36,7 +36,6 @@ const config = {
             '**/DSM-PORTS.md',
             '**/NETWORKING.md',
             '**/NETWORKS-SETUP.md',
-            '**/README.md',
             '**/LICENSE*'
           ],
         },

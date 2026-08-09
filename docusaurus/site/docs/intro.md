@@ -15,8 +15,8 @@ Na levém panelu naleznete přehledně organizované sekce:
 
 * **📁 Firemní Dokumentace**
   * Vaše firemní návody a dokumenty spravované přímo přes Synology Drive.
-* **📁 Technické Návody (Markdown)**
-  * Rychlé cheatsheety a příručky pro efektivní práci s formátem Markdown.
+* **📁 Jak psát wiki v Markdownu**
+  * Rychlé cheatsheety a příručky pro snadné psaní dokumentace v Markdownu.
 
 ---
 
@@ -33,4 +33,4 @@ Přidání nového obsahu je otázkou několika vteřin a nevyžaduje žádné p
 
 > [!TIP]
 > **Potřebujete pomoct s formátováním?**
-> Rozklikněte sekci **Markdown** v levém menu pro rychlý přehled všech stylů, tabulek a zkratek!
+> Rozklikněte sekci **Jak psát wiki v Markdownu** v levém menu pro rychlý přehled všech stylů, tabulek a zkratek!
